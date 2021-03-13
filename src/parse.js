@@ -4,7 +4,7 @@ export default function(tempalteString){
     var rest
     
     // 开始标记正则：^\<([a-z]+[1-6]?)\>
-    var startRegExp = /^\<([a-z]+[1-6]?)(\s[^\<]+)?\>/;
+    var startRegExp = /^\<([a-z]+[1-6]?)\>/;
     var endRegExp =  /^\<\/([a-z]+[1-6]?)\>/;
     // 不是以<开头的并且以</>中间的文字
     var wordRegExp = /^([^\<]+)\<\/([a-z]+[1-6]?)\>/
