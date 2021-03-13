@@ -1,10 +1,12 @@
+import parseAttrs from './parseAttrs'
+
 export default function(tempalteString){
     // 指针
     var index = 0
     var rest
     
     // 开始标记正则：^\<([a-z]+[1-6]?)\>
-    var startRegExp = /^\<([a-z]+[1-6]?)\>/;
+    var startRegExp = /^\<([a-z]+[1-6]?)(\s[^\<]+)?\>/;
     var endRegExp =  /^\<\/([a-z]+[1-6]?)\>/;
     // 不是以<开头的并且以</>中间的文字
     var wordRegExp = /^([^\<]+)\<\/([a-z]+[1-6]?)\>/
@@ -17,16 +19,20 @@ export default function(tempalteString){
         // console.log(index, rest)
         if (startRegExp.test(rest)) { // 识别开始标记
             let tag = rest.match(startRegExp)[1]
+            let attrStr = rest.match(startRegExp)[2] || '' // 捕获第二组
+            const attrs = parseAttrs(attrStr)
             console.log('检测到开始标记', tag)
-            // +2 因为<>占两位
-            index += tag.length + 2
+            
             // 压栈
             stack1.push(tag)
-            stack2.push({ 'tag': tag, 'children':[] })
-            console.log(stack1)
+            stack2.push({ 'tag': tag, 'attrs': attrs, 'children':[] })
+
+            const attrStrLen = attrStr !== null ? attrStr.length : 0
+            index += tag.length + 2 + attrStrLen
         } else if (endRegExp.test(rest)) { // 识别结束标记
             let tag = rest.match(endRegExp)[1]
             console.log('检测到结束标记', tag)
+
             // 弹栈
             let pop_tag = stack1.pop()
             if(tag === pop_tag) {
@@ -37,7 +43,7 @@ export default function(tempalteString){
             } else {
                 throw new Error(pop_tag + '标签没有封闭！！')
             }
-            // +3 因为</>占三位
+
             index += tag.length + 3 
         } else if (wordRegExp.test(rest)) { // 检测不是全空的文字
             let word = rest.match(wordRegExp)[1]

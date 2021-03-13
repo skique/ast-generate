@@ -1,7 +1,7 @@
 import parse from './parse'
 
 const tempalteString = `<div>
-    <h3 class="h3">你好</h3>
+    <h3 class="aa bb cc" id="mybox" >你好</h3>
     <ul>
         <li>A</li>
         <li>B</li>
